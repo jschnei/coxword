@@ -1,0 +1,20 @@
+TODO
+-----
+
+- Fix bug where people have different puzzles loaded (check puzzle against hash)
+- Check solution
+
+Longer Term:
+------------
+
+- Better CSS/layout (clues on right of grid, better fonts, etc.)
+- Rooms
+- Rebuses (does .puz even have support for this?)
+- Show other players highlighted words
+
+completed:
+- clicking on same cell toggles direction
+- backspace should also move one back (and delete?)
+- space should be disabled (maybe skip to next square?)
+- tab should move to next clue
+- clicking on clues should move to clues

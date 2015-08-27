@@ -1,0 +1,74 @@
+
+table {
+    border-collapse: collapse;
+}
+
+.crossword {
+    margin-bottom: 20px;
+    /* no selection when double clicked */
+    -webkit-user-select: none; /* webkit (safari, chrome) browsers */
+    -moz-user-select: none; /* mozilla browsers */
+    -khtml-user-select: none; /* webkit (konqueror) browsers */
+    -ms-user-select: none; /* IE10+ */
+}
+
+.crossword table {
+    margin: 0 auto;
+}
+
+.crossword td {
+    border: 1px solid black;
+    height: 30px;
+    width: 30px;
+    font-size: 25px;
+    font-family: sans-serif;
+    position: relative;
+}
+
+.filled {
+    background-color: black;
+}
+
+.crossword .current-clue {
+    background-color: cyan;
+}
+
+.crossword .current {
+    background-color: yellow;
+}
+
+.cell-text {
+    text-align: center;
+    vertical-align: center;
+    position: relative;
+}
+
+.cell-number {
+    font-size: 10px;
+    position: absolute;
+    top: 0px;
+    z-index: 1;
+}
+
+.clues li {
+    list-style: none;
+}
+
+.headline .current-clue {
+    text-align: center;
+    font-size: 40px;
+}
+
+.clues .current-clue {
+    background-color: yellow;
+}
+
+.across-container {
+    float: left;
+    width: 50%;
+}
+
+.down-container {
+    float: left;
+    width: 50%;
+}

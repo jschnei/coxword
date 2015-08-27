@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='xword.css')}}">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
+<script src={{url_for('static', filename='app.js')}}></script>
+</head>
+<body>
+    <div class="headline">
+        <div class="current-clue"></div>
+    </div>
+    <div class="crossword">
+
+    </div>
+    <div class="clues">
+        <div class="across-container">
+        Across
+        <ul class="across-clues">
+        
+        </ul>
+        </div>
+        <div class="down-container">
+        Down
+        <ul class="down-clues">
+        
+        </ul>
+        </div>
+    </div>
+    <div class="upload">
+        <p>Upload a crossword (.puz Across-Lite file)</p>
+        <form action="upload" method=post enctype=multipart/form-data>
+        <p><input type=file name="file">
+            <input type=submit value=Upload>
+        </form>
+    </div>
+</body>
+</html>
