@@ -1,4 +1,5 @@
 import puz
+import json
 
 def load_from_file(f):
 #    print 'GOT HERE!'
@@ -13,8 +14,14 @@ def load_from_file(f):
                 'clues': {
                     'across': pcnum.across,
                     'down': pcnum.down
-                    }
+                    },
+                'markup': puzzle.markup().get_markup_squares()
                 }
+
+        uid = hash(json.dumps(puzobj, sort_keys=True))
+        puzobj['uid'] = str(uid)
+
+        print puzobj['uid']
 
         return puzobj
 

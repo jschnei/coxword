@@ -1,18 +1,25 @@
 TODO
 -----
-
-- Fix bug where people have different puzzles loaded (check puzzle against hash)
 - Check solution
+- option to move instead of changing directions on arrow input
 
 Longer Term:
 ------------
 
+- add options for UI features
 - Better CSS/layout (clues on right of grid, better fonts, etc.)
 - Rooms
 - Rebuses (does .puz even have support for this?)
 - Show other players highlighted words
+- zoom in bug (google chrome)
 
 completed:
+- Fix bug where people have different puzzles loaded (check puzzle against hash)
+- add circled squares (from markdown in .puz)
+- option not to move to next entry when finish word
+- option to skip already filled squares
+- ENTER/shift-ENTER same as TAB/shift-TABs
+- shift TAB move backward
 - clicking on same cell toggles direction
 - backspace should also move one back (and delete?)
 - space should be disabled (maybe skip to next square?)

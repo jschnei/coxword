@@ -1,11 +1,10 @@
 var processPuzzleData = function(puzzleData){
-    console.log(puzzleData);
-
     var puzzle = {
                 height: puzzleData.height,
                 width: puzzleData.width,
                 grid: [],
-                clues: []
+                clues: [],
+                uid: puzzleData.uid
     };
 
     // initialize grid
@@ -19,9 +18,14 @@ var processPuzzleData = function(puzzleData){
             nextUp: -1,
             nextDown: -1,
             acrossClue: -1,
-            downClue: -1
+            downClue: -1,
+            circled: false
         };
         puzzle.grid.push(square);
+    });
+
+    puzzleData.markup.forEach(function(sq){
+        puzzle.grid[sq].circled = true;
     });
 
     // initialize clues
@@ -31,6 +35,7 @@ var processPuzzleData = function(puzzleData){
             num: cl.num,
             clue: cl.clue,
             cell: cl.cell,
+            endCell: cl.cell+cl.len-1,
             squares: [],
             type: 'across'
         };
@@ -48,6 +53,7 @@ var processPuzzleData = function(puzzleData){
             num: cl.num,
             clue: cl.clue,
             cell: cl.cell,
+            endCell: cl.cell+(cl.len-1)*puzzle.width,
             squares: [],
             type: 'down'
         };
@@ -115,7 +121,7 @@ var processPuzzleData = function(puzzleData){
 }
 
 var createGrid = function(puzzle) {
-    var grid = [];
+    var gridDOM = [];
     var table = $('<table>');
     for(var h=0;h<puzzle.height;h++){
         var row = $('<tr>');
@@ -125,11 +131,13 @@ var createGrid = function(puzzle) {
             if(puzzle.grid[ind].filled){
                 cell.addClass('filled');
             }
+
             cell.data('ind', ind);
             cell.appendTo(row);
 
             var cellText = $('<div>');
             cellText.addClass('cell-text');
+
             cellText.appendTo(cell);
 
             if(puzzle.grid[ind].num){
@@ -139,14 +147,19 @@ var createGrid = function(puzzle) {
                 cellnum.appendTo(cell);
             }
 
-            grid.push(cell);
+            gridDOM.push(cell);
+
+            if(puzzle.grid[ind].circled){
+                var cellcircle = $('<div>');
+                cellcircle.addClass('circle');
+                cellcircle.appendTo(cell);
+            }
         }
         row.appendTo(table);
     }
     table.appendTo($('.crossword'));
 
-
-    return grid;
+    return gridDOM;
 }
 
 var createClues = function(puzzle){
@@ -196,7 +209,7 @@ var main = function() {
         curCell = nextCell;
 
         updateCurrentClue();
-    }
+    };
 
     var updateCurrentClue = function(){
         if(curClue!=-1){
@@ -223,16 +236,53 @@ var main = function() {
                 gridDOM[cellInd].addClass('current-clue');
             });
         }
-    }
+    };
 
     var changeDir = function(dir){
         curDir = dir;
         updateCurrentClue();
-    }
+    };
 
-    $('li').click(function(){
-        console.log("this works");
-    });
+    var navigateForward = function(){
+        if(curDir==='across'){
+            navigateTo(puzzle.grid[curCell].nextRight);
+        }else if(curDir==='down'){
+            navigateTo(puzzle.grid[curCell].nextDown);
+        }
+    };
+
+    var navigateBackward = function(){
+        if(curDir==='across'){
+            navigateTo(puzzle.grid[curCell].nextLeft);
+        }else if(curDir==='down'){
+            navigateTo(puzzle.grid[curCell].nextUp);
+        }
+    };
+
+    var navigateToEmpty = function(){
+        while(curCell!=puzzle.clues[curClue].endCell &&
+              gridTextDOM[curCell].text().length > 0){
+            navigateForward();
+        }
+    };
+
+    var navigateToClue = function(clue){
+        changeDir(puzzle.clues[clue].type);
+        navigateTo(puzzle.clues[clue].cell);
+    };
+
+    var updateCell = function(value){
+        $('.current .cell-text').text(value);
+
+        socket.emit('update', {cell: curCell,
+                                value: value,
+                                uid: puzzle.uid});
+    };
+
+    var setAlert = function(alertString){
+        $('.alert').show();
+        $('.alert').text(alertString);
+    };
 
     $('.crossword').on('click', 'td', function(){
         if(!isPuzzle) return;
@@ -254,12 +304,8 @@ var main = function() {
     $('.clues').on('click', 'li', function(){
         if(!isPuzzle) return;
 
-        var nextClue = $(this).data('ind');
-        changeDir(puzzle.clues[nextClue].type);
-        navigateTo(puzzle.clues[nextClue].cell);
-
+        navigateToClue($(this).data('ind'));
     });
-
 
 
     $(document).keydown(function(event){
@@ -268,16 +314,15 @@ var main = function() {
         var keyCode = event.which;
 
         if(keyCode>=65 && keyCode<=90){
-            $('.current .cell-text').text(String.fromCharCode(keyCode));
+            var cellEmpty = (gridTextDOM[curCell].text()==='');
+            updateCell(String.fromCharCode(keyCode));
 
-            socket.emit('update', {cell: curCell,
-                                   value: String.fromCharCode(keyCode)});
-
-
-            if(curDir==='across'){
-                navigateTo(puzzle.grid[curCell].nextRight);
-            }else if(curDir==='down'){
-                navigateTo(puzzle.grid[curCell].nextDown);
+            if(curCell != puzzle.clues[curClue].endCell){
+                if(cellEmpty){
+                    navigateToEmpty();
+                }else{
+                    navigateForward();
+                }
             }
         }else{
             switch(keyCode){
@@ -285,43 +330,34 @@ var main = function() {
                     event.preventDefault();
                     if($('.current .cell-text').text() === ''){
                         // if empty, move back first
-                        if(curDir==='across'){
-                            navigateTo(puzzle.grid[curCell].nextLeft);
-                        }else if(curDir==='down'){
-                            navigateTo(puzzle.grid[curCell].nextUp);
-                        }
+                        navigateBackward();
                     }
 
-                    $('.current .cell-text').text('');
-                    socket.emit('update', {
-                        cell: curCell,
-                        value: ''});
+                    updateCell('');
 
                     break;
 
                 case 9: // tab
+                case 13: // enter
                     event.preventDefault();
 
-                    var nextClue = (curClue + 1)%(puzzle.clues.length);
+                    var nextClue;
+                    if(event.shiftKey){
+                        nextClue = (curClue - 1)%(puzzle.clues.length);
+                        if(nextClue < 0) nextClue += puzzle.clues.length;
+                    }else{
+                        nextClue = (curClue + 1)%(puzzle.clues.length);
+                    }
 
-                    changeDir(puzzle.clues[nextClue].type);
-                    navigateTo(puzzle.clues[nextClue].cell);
+                    navigateToClue(nextClue);
 
                     break;
 
                 case 32: // space
                     event.preventDefault();
-                    $('.current .cell-text').text('');
+                    updateCell('');
 
-                    socket.emit('update', {cell: curCell,
-                                           value: ''});
-
-
-                    if(curDir==='across'){
-                        navigateTo(puzzle.grid[curCell].nextRight);
-                    }else if(curDir==='down'){
-                        navigateTo(puzzle.grid[curCell].nextDown);
-                    }
+                    navigateForward();
 
                     break;
 
@@ -363,10 +399,7 @@ var main = function() {
 
                 case 46: // delete
                     event.preventDefault();
-                    $('.current .cell-text').text('');
-                    socket.emit('update', {
-                        cell: curCell,
-                        value: ''});
+                    updateCell('');
                     break;
 
                 default:
@@ -379,8 +412,6 @@ var main = function() {
         resetPuzzle();
 
         if(!$.isEmptyObject(puzzleData)){
-            console.log(puzzleData);
-
             puzzle = processPuzzleData(puzzleData);
             isPuzzle = true;
 
@@ -397,7 +428,7 @@ var main = function() {
         }else{
             isPuzzle = false;
         }
-    }
+    };
 
     //socket.io initialization
     var socket = io.connect('http://' + document.domain + ':' + location.port);
@@ -407,10 +438,12 @@ var main = function() {
     });
 
     socket.on('update', function(msg) {
-        console.log('update received!');
-        console.log(msg);
-
         if(!isPuzzle) return;
+        if(msg['uid']!==puzzle.uid){
+            setAlert('Puzzle out of date; please refresh page');
+            return;
+        }
+
         var cell = msg['cell'];
         var value = msg['value'];
 
@@ -419,6 +452,12 @@ var main = function() {
 
     socket.on('update_all', function(msg) {
         if(!isPuzzle) return;
+
+        if(msg['uid']!==puzzle.uid){
+            setAlert('Puzzle out of date; please refresh page.');
+            return;
+        }
+
         for(var i=0;i<gridDOM.length;i++){
             gridTextDOM[i].text(msg.data[i]);
         }
@@ -426,6 +465,19 @@ var main = function() {
 
     socket.on('update_puzzle', function(puzzleData) {
         initialize(puzzleData);
+        console.log('updating puzzle!!');
+        console.log(puzzle.uid);
+    });
+
+    socket.on('error', function(message) {
+        switch(message.code){
+            case 'REFR':
+                setAlert('Puzzle out of date; please refresh page');
+                break;
+
+            default:
+                break;
+        }
     });
 };
 

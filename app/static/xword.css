@@ -1,6 +1,7 @@
-
-table {
-    border-collapse: collapse;
+.alert {
+    background-color: #F88;
+    border: 2px solid #8B0000;
+    display: none;
 }
 
 .crossword {
@@ -13,7 +14,9 @@ table {
 }
 
 .crossword table {
+    border-collapse: collapse;
     margin: 0 auto;
+    table-layout: fixed;
 }
 
 .crossword td {
@@ -27,6 +30,17 @@ table {
 
 .filled {
     background-color: black;
+}
+
+.circle {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: 1;
 }
 
 .crossword .current-clue {
@@ -47,7 +61,7 @@ table {
     font-size: 10px;
     position: absolute;
     top: 0px;
-    z-index: 1;
+    z-index: 2;
 }
 
 .clues li {

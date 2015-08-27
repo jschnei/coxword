@@ -14,6 +14,14 @@ puzzle = None
 def update_grid(json):
     global fill
 
+    if not puzzle:
+        return
+
+    if json['uid'] != puzzle['uid']:
+        emit('error', {'code': 'REFR'})
+        print 'ERROR!', 'json', json['uid'], 'flask', puzzle['uid']
+        return
+
     cell = json['cell']
     event = (json['value'], time.time())
 
@@ -21,9 +29,9 @@ def update_grid(json):
         fill[cell] = event
 
     emit('update',  {'cell': cell,
-                     'value': fill[cell][0]},
+                     'value': fill[cell][0],
+                     'uid': puzzle['uid']},
                     broadcast=True)
-
 
 
 @socketio.on('log')
@@ -31,10 +39,12 @@ def log_message(message):
     print message
     if message['data']=='connect':
         if puzzle:
+            print 'UID:', puzzle['uid']
             emit('update_puzzle', puzzle)
             if fill:
                 list_fill = [fill[i][0] for i in xrange(puzzle['size'])]
-                emit('update_all', {'data': list_fill})
+                emit('update_all', {'data': list_fill,
+                                    'uid': puzzle['uid']})
 
 
 @app.route('/upload', methods=['POST'])
