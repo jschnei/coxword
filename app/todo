@@ -1,13 +1,14 @@
 TODO
 -----
+- add options for UI features
+- Better CSS/layout (clues on right of grid, better fonts, etc.)
 - Check solution
 - option to move instead of changing directions on arrow input
+- option to strike/grey out filled in clues
 
 Longer Term:
 ------------
 
-- add options for UI features
-- Better CSS/layout (clues on right of grid, better fonts, etc.)
 - Rooms
 - Rebuses (does .puz even have support for this?)
 - Show other players highlighted words
