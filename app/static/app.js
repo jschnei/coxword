@@ -271,8 +271,23 @@ var main = function() {
         navigateTo(puzzle.clues[clue].cell);
     };
 
+    var greyOutClue = function(clue){
+        if(clue===-1) return;
+        if(!$('#grey-out').prop('checked')) return;
+
+        var filled = true;
+        puzzle.clues[clue].squares.forEach(function(sq){
+            if(gridTextDOM[sq].text().length === 0) filled = false;
+        });
+
+        cluesDOM[clue].toggleClass('complete', filled);
+    };
+
     var updateCell = function(value){
         $('.current .cell-text').text(value);
+
+        greyOutClue(puzzle.grid[curCell].acrossClue);
+        greyOutClue(puzzle.grid[curCell].downClue);
 
         socket.emit('update', {cell: curCell,
                                 value: value,
@@ -283,6 +298,22 @@ var main = function() {
         $('.alert').show();
         $('.alert').text(alertString);
     };
+
+    $('#grey-out').on('click', function(){
+        if($(this).prop('checked')){
+            for(var i=0;i<puzzle.clues.length;i++){
+                greyOutClue(i);
+            }
+        }else{
+            for(var i=0;i<puzzle.clues.length;i++){
+                cluesDOM[i].removeClass('complete');
+            }
+        }
+    });
+
+    $('.option-select').on('click', function(){
+        $('.option-list').toggle();
+    });
 
     $('.crossword').on('click', 'td', function(){
         if(!isPuzzle) return;
@@ -314,13 +345,19 @@ var main = function() {
         var keyCode = event.which;
 
         if(keyCode>=65 && keyCode<=90){
+            if(event.ctrlKey) return;
+
             var cellEmpty = (gridTextDOM[curCell].text()==='');
             updateCell(String.fromCharCode(keyCode));
 
             if(curCell != puzzle.clues[curClue].endCell){
-                if(cellEmpty){
+                if(cellEmpty && $('#skip-filled').prop('checked')){
                     navigateToEmpty();
                 }else{
+                    navigateForward();
+                }
+            }else{
+                if($('#move-at-end').prop('checked')){
                     navigateForward();
                 }
             }
@@ -361,12 +398,27 @@ var main = function() {
 
                     break;
 
+                case 35: // end
+                    event.preventDefault();
+
+                    navigateTo(puzzle.clues[curClue].endCell);
+                    break;
+
+                case 36: // home
+                    event.preventDefault();
+
+                    navigateTo(puzzle.clues[curClue].cell);
+                    break;
+
                 case 37: // left
                     event.preventDefault();
                     if(curDir==='across' || puzzle.grid[curCell].acrossClue==-1){
                         navigateTo(puzzle.grid[curCell].nextLeft);
                     }else{
                         changeDir('across');
+                        if($('#move-change-dir').prop('checked')){
+                            navigateTo(puzzle.grid[curCell].nextLeft);
+                        }
                     }
                     break;
 
@@ -376,6 +428,9 @@ var main = function() {
                         navigateTo(puzzle.grid[curCell].nextUp);
                     }else{
                         changeDir('down');
+                        if($('#move-change-dir').prop('checked')){
+                            navigateTo(puzzle.grid[curCell].nextUp);
+                        }
                     }
                     break;
 
@@ -385,6 +440,9 @@ var main = function() {
                         navigateTo(puzzle.grid[curCell].nextRight);
                     }else{
                         changeDir('across');
+                        if($('#move-change-dir').prop('checked')){
+                            navigateTo(puzzle.grid[curCell].nextRight);
+                        }
                     }
                     break;
 
@@ -394,6 +452,9 @@ var main = function() {
                         navigateTo(puzzle.grid[curCell].nextDown);
                     }else{
                         changeDir('down');
+                        if($('#move-change-dir').prop('checked')){
+                            navigateTo(puzzle.grid[curCell].nextDown);
+                        }
                     }
                     break;
 
@@ -448,6 +509,9 @@ var main = function() {
         var value = msg['value'];
 
         gridTextDOM[cell].text(value);
+
+        greyOutClue(puzzle.grid[cell].acrossClue);
+        greyOutClue(puzzle.grid[cell].downClue);
     });
 
     socket.on('update_all', function(msg) {
@@ -460,6 +524,10 @@ var main = function() {
 
         for(var i=0;i<gridDOM.length;i++){
             gridTextDOM[i].text(msg.data[i]);
+        }
+
+        for(var i=0;i<puzzle.clues.length;i++){
+            greyOutClue(i);
         }
     });
 

@@ -64,8 +64,27 @@
     z-index: 2;
 }
 
+.option-select{
+    font-weight: bold;
+    cursor: pointer;
+    /* no selection when double clicked */
+    -webkit-user-select: none; /* webkit (safari, chrome) browsers */
+    -moz-user-select: none; /* mozilla browsers */
+    -khtml-user-select: none; /* webkit (konqueror) browsers */
+    -ms-user-select: none; /* IE10+ */
+}
+
+.option-list{
+    display: none;
+}
+
 .clues li {
     list-style: none;
+}
+
+.clues .complete {
+    text-decoration: line-through;
+    color: #555;
 }
 
 .headline .current-clue {

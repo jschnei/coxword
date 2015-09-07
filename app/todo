@@ -1,24 +1,30 @@
 TODO
 -----
-- add options for UI features
+
 - Better CSS/layout (clues on right of grid, better fonts, etc.)
 - Check solution
-- option to move instead of changing directions on arrow input
-- option to strike/grey out filled in clues
+- don't jump to end if you fill in the last empty square
 
 Longer Term:
 ------------
 
+- Timer
 - Rooms
 - Rebuses (does .puz even have support for this?)
 - Show other players highlighted words
 - zoom in bug (google chrome)
 
 completed:
+- add home and end keys
+- when holding down ctrl, don't enter letters
+- options:
+    - toggle options UI
+    - option to strike/grey out filled in clues
+    - option not to move to next entry when finish word
+    - option to move instead of changing directions on arrow input
+    - option to skip already filled squares
 - Fix bug where people have different puzzles loaded (check puzzle against hash)
 - add circled squares (from markdown in .puz)
-- option not to move to next entry when finish word
-- option to skip already filled squares
 - ENTER/shift-ENTER same as TAB/shift-TABs
 - shift TAB move backward
 - clicking on same cell toggles direction
@@ -26,3 +32,21 @@ completed:
 - space should be disabled (maybe skip to next square?)
 - tab should move to next clue
 - clicking on clues should move to clues
+
+
+NYT options
+------------
+After changing direction with the arrow keys:
+    Stay in the same square
+    Move in the direction of the arrow
+Within a word:
+    Skip over filled squares
+At the end of a word:
+    Jump back to first blank in the word (if any)
+    Jump to the next clue (if not jumping back)
+Appearance
+    Show clock
+    High-contrast mode
+Interaction
+    Play sound on solve
+    Suppress disqualification warnings
