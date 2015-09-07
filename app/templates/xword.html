@@ -9,51 +9,59 @@
 </head>
 <body>
     <div class="alert"></div>
-    <div class="headline">
-        <div class="current-clue"></div>
-    </div>
-    <div class="crossword">
 
-    </div>
-    <div class="options">
-        <div class="option-select">
-            <p>Options</p>
+    <div class="row">
+    <div class="container">
+        <div class="headline">
+            <div class="current-clue"></div>
         </div>
-        <div class="option-list">
-            <input type="checkbox" id="move-change-dir">
-            Move in the direction of the arrow after changing direction with the arrow keys.
-            <br>
-            <input type="checkbox" id="skip-filled" checked>
-            Skip over filled squares.
-            <br>
-            <input type="checkbox" id="move-at-end">
-            Jump to next clue at end of a word.
-            <br>
-            <input type="checkbox" id="grey-out" checked>
-            Strikeout and grey completed clues.
-            <br>
+        <div class="crossword"></div>
+        <div class="options">
+            <div class="option-select">
+                <p>Options</p>
+            </div>
+            <div class="option-list">
+                <input type="checkbox" id="move-change-dir">
+                Move in the direction of the arrow after changing direction with the arrow keys.
+                <br>
+                <input type="checkbox" id="skip-filled" checked>
+                Skip over filled squares.
+                <br>
+                <input type="checkbox" id="move-at-end">
+                Jump to next clue at end of a word.
+                <br>
+                <input type="checkbox" id="grey-out" checked>
+                Strikeout and grey completed clues.
+                <br>
+            </div>
+        </div>
+        <div class="upload">
+            <p>Upload a crossword (.puz Across-Lite file)</p>
+            <form action="upload" method=post enctype=multipart/form-data>
+            <p><input type=file name="file">
+                <input type=submit value=Upload>
+            </form>
         </div>
     </div>
-    <div class="clues">
-        <div class="across-container">
-        Across
-        <ul class="across-clues">
 
-        </ul>
-        </div>
-        <div class="down-container">
-        Down
-        <ul class="down-clues">
+    <div class="container">
+        <div class="clues">
+            <div class="across-container">
+            <p>Across</p>
+            <ul class="across-clues">
 
-        </ul>
+            </ul>
+            </div>
+            <div class="down-container">
+            <p>Down</p>
+            <ul class="down-clues">
+
+            </ul>
+            </div>
         </div>
     </div>
-    <div class="upload">
-        <p>Upload a crossword (.puz Across-Lite file)</p>
-        <form action="upload" method=post enctype=multipart/form-data>
-        <p><input type=file name="file">
-            <input type=submit value=Upload>
-        </form>
     </div>
+
+
 </body>
 </html>

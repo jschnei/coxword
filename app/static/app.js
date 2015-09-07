@@ -243,27 +243,41 @@ var main = function() {
         updateCurrentClue();
     };
 
-    var navigateForward = function(){
+    var getNextCell = function(cell){
         if(curDir==='across'){
-            navigateTo(puzzle.grid[curCell].nextRight);
+            return puzzle.grid[cell].nextRight;
         }else if(curDir==='down'){
-            navigateTo(puzzle.grid[curCell].nextDown);
+            return puzzle.grid[cell].nextDown;
         }
     };
 
-    var navigateBackward = function(){
+    var navigateForward = function(){
+        navigateTo(getNextCell(curCell));
+    };
+
+    var getPrevCell = function(cell){
         if(curDir==='across'){
-            navigateTo(puzzle.grid[curCell].nextLeft);
+            return puzzle.grid[curCell].nextLeft;
         }else if(curDir==='down'){
-            navigateTo(puzzle.grid[curCell].nextUp);
+            return puzzle.grid[curCell].nextUp;
         }
+    }
+
+    var navigateBackward = function(){
+        navigateTo(getPrevCell(curCell));
     };
 
     var navigateToEmpty = function(){
-        while(curCell!=puzzle.clues[curClue].endCell &&
-              gridTextDOM[curCell].text().length > 0){
-            navigateForward();
+        var nextCell = getNextCell(curCell);
+        while(nextCell!==curCell && gridTextDOM[nextCell].text().length > 0){
+            if(nextCell===puzzle.clues[curClue].endCell){
+                nextCell = puzzle.clues[curClue].cell;
+            }else{
+                nextCell = getNextCell(nextCell);
+            }
         }
+
+        navigateTo(nextCell);
     };
 
     var navigateToClue = function(clue){
