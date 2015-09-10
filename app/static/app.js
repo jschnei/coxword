@@ -177,6 +177,10 @@ var createClues = function(puzzle){
         cluesDOM.push(entry);
     });
 
+    $('#across-container').height($('#main').height()/2);
+    $('#down-container').height($('#main').height()/2);
+
+
     return cluesDOM;
 }
 
@@ -231,10 +235,17 @@ var main = function() {
         if(curClue!=-1){
             $('.headline .current-clue').text(puzzle.clues[curClue].num +
                 dirLetter + '. ' + puzzle.clues[curClue].clue);
+            $('.headline').width($('.crossword').width());
             cluesDOM[curClue].addClass('current-clue');
             puzzle.clues[curClue].squares.forEach(function(cellInd){
                 gridDOM[cellInd].addClass('current-clue');
             });
+
+            if(puzzle.clues[curClue].type==='across'){
+                $('#across-container').scrollTo(cluesDOM[curClue]);
+            }else if(puzzle.clues[curClue].type==='down'){
+                $('#down-container').scrollTo(cluesDOM[curClue]);
+            }
         }
     };
 
@@ -327,6 +338,10 @@ var main = function() {
 
     $('.option-select').on('click', function(){
         $('.option-list').toggle();
+    });
+
+    $('.upload-select').on('click', function(){
+        $('.upload-list').toggle();
     });
 
     $('.crossword').on('click', 'td', function(){

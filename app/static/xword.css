@@ -1,5 +1,4 @@
 .container {
-/*     border: 1px solid #FF0000; */
     float:left;
     margin: 10px;
     padding: 10px;
@@ -76,7 +75,8 @@
     z-index: 2;
 }
 
-.option-select{
+.option-select, .upload-select{
+    color: #00E;
     font-weight: bold;
     cursor: pointer;
     /* no selection when double clicked */
@@ -86,8 +86,18 @@
     -ms-user-select: none; /* IE10+ */
 }
 
-.option-list{
+.option-list, .upload-list{
     display: none;
+}
+
+.clues {
+    overflow-y: scroll;
+    min-width: 150px;
+}
+
+.clue-header {
+    font-weight: bold;
+    text-align: center;
 }
 
 .clues li {
