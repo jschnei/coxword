@@ -4,24 +4,30 @@ TODO
 Priority:
 ---------
 
-- Check solution
 - highlight crossing clue in different color?
 
 - Better CSS/layout (clues on right of grid, better fonts, etc.)
     - (still needs work)
+    - automatically scale text in headline clue to not wrap
+    - hide clue section if no puzzle
+    - different color for solve puzzle prompt
+
+- when move to new clue, move to first empty square
+- Timer
 
 Longer Term:
 ------------
 
-- Timer
-- Rebuses (does .puz even have support for this?)
-- Rooms
+- Rebuses
 - Show other players highlighted words
 - zoom in bug (google chrome)
+- host somewhere
 
 Completed:
 ----------
 
+- Rooms
+- Check solution
 - don't jump to end if you fill in the last empty square
 - add home and end keys
 - when holding down ctrl, don't enter letters

@@ -316,7 +316,8 @@ var main = function() {
 
         socket.emit('update', {cell: curCell,
                                 value: value,
-                                uid: puzzle.uid});
+                                uid: puzzle.uid,
+                                room: room});
     };
 
     var setAlert = function(alertString){
@@ -522,9 +523,10 @@ var main = function() {
 
     //socket.io initialization
     var socket = io.connect('http://' + document.domain + ':' + location.port);
+    var room = location.pathname;
 
     socket.on('connect', function() {
-        socket.emit('log', {data: 'connect'});
+        socket.emit('init', {room: room});
     });
 
     socket.on('update', function(msg) {
@@ -541,6 +543,10 @@ var main = function() {
 
         greyOutClue(puzzle.grid[cell].acrossClue);
         greyOutClue(puzzle.grid[cell].downClue);
+
+        if(msg['solved']){
+            setAlert('Good job! You solved the puzzle!');
+        }
     });
 
     socket.on('update_all', function(msg) {
@@ -557,6 +563,10 @@ var main = function() {
 
         for(var i=0;i<puzzle.clues.length;i++){
             greyOutClue(i);
+        }
+
+        if(msg['solved']){
+            setAlert('Good job! You solved the puzzle!');
         }
     });
 
