@@ -6,6 +6,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script src="//cdn.jsdelivr.net/jquery.scrollto/2.1.0/jquery.scrollTo.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
+<script src={{url_for('static', filename='jquery.quickfit.js')}}></script>
 <script src={{url_for('static', filename='app.js')}}></script>
 </head>
 <body>
@@ -17,40 +18,9 @@
             <div class="current-clue"></div>
         </div>
         <div class="crossword"></div>
-        <div class="options">
-            <div class="option-select">
-                <p>Options</p>
-            </div>
-            <div class="option-list">
-                <input type="checkbox" id="move-change-dir">
-                Move in the direction of the arrow after changing direction with the arrow keys.
-                <br>
-                <input type="checkbox" id="skip-filled" checked>
-                Skip over filled squares.
-                <br>
-                <input type="checkbox" id="move-at-end">
-                Jump to next clue at end of a word.
-                <br>
-                <input type="checkbox" id="grey-out" checked>
-                Strikeout and grey completed clues.
-                <br>
-            </div>
-        </div>
-        <div class="upload">
-            <div class="upload-select">
-                <p>Upload</p>
-            </div>
-            <div class="upload-list">
-                <p>Upload a crossword (.puz Across-Lite file)</p>
-                <form method=post enctype=multipart/form-data>
-                <p><input type=file name="file">
-                    <input type=submit value=Upload>
-                </form>
-            </div>
-        </div>
     </div>
 
-
+    <div class="cluebox">
         <div class="container">
             <div class="clue-header">Across</div>
             <div class="clues" id="across-container">
@@ -67,8 +37,41 @@
                 </ul>
             </div>
         </div>
+    </div>
 
     </div>
+
+    <div class="options">
+    <div class="option-select">
+        <p>Options</p>
+    </div>
+    <div class="option-list">
+        <input type="checkbox" id="move-change-dir">
+        Move in the direction of the arrow after changing direction with the arrow keys.
+        <br>
+        <input type="checkbox" id="skip-filled" checked>
+        Skip over filled squares.
+        <br>
+        <input type="checkbox" id="move-at-end">
+        Jump to next clue at end of a word.
+        <br>
+        <input type="checkbox" id="grey-out" checked>
+        Strikeout and grey completed clues.
+        <br>
+    </div>
+</div>
+<div class="upload">
+    <div class="upload-select">
+        <p>Upload</p>
+    </div>
+    <div class="upload-list">
+        <p>Upload a crossword (.puz Across-Lite file)</p>
+        <form method=post enctype=multipart/form-data>
+        <p><input type=file name="file">
+            <input type=submit value=Upload>
+        </form>
+    </div>
+</div>
 
 
 </body>

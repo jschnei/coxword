@@ -1,6 +1,5 @@
 .container {
     float:left;
-    margin: 10px;
     padding: 10px;
 }
 
@@ -90,18 +89,35 @@
     display: none;
 }
 
+#main{
+/*     border: 1px solid #0F0; */
+}
+
+.cluebox{
+    display: flex;
+    flex-direction: column;
+    min-width: 200px;
+    max-width: 500px;
+/*     border: 1px solid #F00; */
+    margin: 10px;
+    padding: 10px;
+}
+
 .clues {
     overflow-y: scroll;
-    min-width: 150px;
+    padding: 0;
+/*     border: 1px solid #00F; */
 }
 
 .clue-header {
     font-weight: bold;
-    text-align: center;
+/*     text-align: center; */
 }
 
-.clues li {
+.clues ul {
+    overflow-x: hidden;
     list-style: none;
+    padding: 0;
 }
 
 .clues .complete {
@@ -111,25 +127,14 @@
 
 .headline {
     width: 100%;
-}
-
-.headline .current-clue {
-    text-align: center;
+    height: 60px;
+/*     text-align: center; */
+    vertical-align: middle;
     font-size: 40px;
-/*     overflow: auto; */
-/*     word-wrap: break-word; */
+/*     border: 1px solid #F00; */
 }
 
 .clues .current-clue {
     background-color: yellow;
 }
 
-.across-container {
-    float: left;
-    width: 50%;
-}
-
-.down-container {
-    float: left;
-    width: 50%;
-}

@@ -177,15 +177,16 @@ var createClues = function(puzzle){
         cluesDOM.push(entry);
     });
 
-    $('#across-container').height($('#main').height()/2);
-    $('#down-container').height($('#main').height()/2);
+    $('#across-container').height($('#main').height()/2 - 40);
+    $('#down-container').height($('#main').height()/2 - 40);
 
+    $('.headline').width($('.crossword').width());
 
     return cluesDOM;
 }
 
 var resetPuzzle = function(){
-    $('.current-clue').empty();
+    $('.headline').empty();
     $('.crossword').empty();
     $('.across-clues').empty();
     $('.down-clues').empty();
@@ -203,6 +204,8 @@ var main = function() {
     var curCell;
     var curClue;
     var curDir;
+
+    var autoscrollUI = true;
 
     var navigateTo = function(nextCell) {
         if(puzzle.grid[nextCell].filled) return;
@@ -233,18 +236,20 @@ var main = function() {
         }
 
         if(curClue!=-1){
-            $('.headline .current-clue').text(puzzle.clues[curClue].num +
+            $('.headline').text(puzzle.clues[curClue].num +
                 dirLetter + '. ' + puzzle.clues[curClue].clue);
-            $('.headline').width($('.crossword').width());
+            $('.headline').quickfit({min: 20, max:40});
             cluesDOM[curClue].addClass('current-clue');
             puzzle.clues[curClue].squares.forEach(function(cellInd){
                 gridDOM[cellInd].addClass('current-clue');
             });
 
-            if(puzzle.clues[curClue].type==='across'){
-                $('#across-container').scrollTo(cluesDOM[curClue]);
-            }else if(puzzle.clues[curClue].type==='down'){
-                $('#down-container').scrollTo(cluesDOM[curClue]);
+            if(autoscrollUI){
+                if(puzzle.clues[curClue].type==='across'){
+                    $('#across-container').scrollTo(cluesDOM[curClue]);
+                }else if(puzzle.clues[curClue].type==='down'){
+                    $('#down-container').scrollTo(cluesDOM[curClue]);
+                }
             }
         }
     };
@@ -365,9 +370,10 @@ var main = function() {
     $('.clues').on('click', 'li', function(){
         if(!isPuzzle) return;
 
+        autoscrollUI = false; // disable autoscroll
         navigateToClue($(this).data('ind'));
+        autoscrollUI = true; // reenable autoscroll
     });
-
 
     $(document).keydown(function(event){
         if(!isPuzzle) return;
