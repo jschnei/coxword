@@ -56,8 +56,11 @@ def initialize(message):
             emit('update_all', {'data': list_fill,
                                 'solved': puz_util.check_solution(puzzle, fill),
                                 'uid': puzzle['uid']})
+        else:
+            emit('update_puzzle', dict())
     else:
         room_puzzles[room] = (None, defaultdict(lambda: ('', 0)))
+        emit('update_puzzle', dict())
 
 
 @app.route('/', defaults={'path': ''}, methods=['GET', 'POST'])

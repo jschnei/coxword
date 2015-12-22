@@ -523,6 +523,7 @@ var main = function() {
             gridDOM[curCell].addClass('current');
             updateCurrentClue();
         }else{
+            $('.puzzle-active').hide();
             isPuzzle = false;
         }
     };
@@ -530,6 +531,7 @@ var main = function() {
     //socket.io initialization
     var socket = io.connect('http://' + document.domain + ':' + location.port);
     var room = location.pathname;
+    
 
     socket.on('connect', function() {
         socket.emit('init', {room: room});
