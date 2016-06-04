@@ -4,6 +4,8 @@ TODO
 Priority:
 ---------
 
+- when move to new clue, move to first empty square
+- Error: "TypeError: 'NoneType' object is not iterable"
 - fix screen before puzzle is uploaded
 - highlight crossing clue in different color?
 
@@ -13,7 +15,6 @@ Priority:
     - hide clue section if no puzzle
     - different color for solve puzzle prompt
 
-- when move to new clue, move to first empty square
 - Timer
 
 Longer Term:
@@ -22,11 +23,12 @@ Longer Term:
 - Rebuses
 - Show other players highlighted words
 - zoom in bug (google chrome)
-- host somewhere
+
 
 Completed:
 ----------
 
+- host somewhere
 - Rooms
 - Check solution
 - don't jump to end if you fill in the last empty square

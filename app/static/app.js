@@ -273,28 +273,65 @@ var main = function() {
 
     var getPrevCell = function(cell){
         if(curDir==='across'){
-            return puzzle.grid[curCell].nextLeft;
+            return puzzle.grid[cell].nextLeft;
         }else if(curDir==='down'){
-            return puzzle.grid[curCell].nextUp;
+            return puzzle.grid[cell].nextUp;
         }
     }
 
     var navigateBackward = function(){
         navigateTo(getPrevCell(curCell));
     };
-
-    var navigateToEmpty = function(){
-        var nextCell = getNextCell(curCell);
-        while(nextCell!==curCell && gridTextDOM[nextCell].text().length > 0){
-            if(nextCell===puzzle.clues[curClue].endCell){
-                nextCell = puzzle.clues[curClue].cell;
-            }else{
-                nextCell = getNextCell(nextCell);
+    
+    var firstBlank = function(){
+        var cell = puzzle.clues[curClue].cell;
+        do {
+            if(gridTextDOM[cell].text().length === 0){
+                return cell;
             }
+            cell = getNextCell(cell);
+        } while(cell!==puzzle.clues[curClue].endCell);
+        return -1;
+    }
+    
+    var getInputCell = function(overwrite){
+        var endCell = puzzle.clues[curClue].endCell;
+        
+        if(overwrite){
+            if(curCell != endCell){
+                return getNextCell(curCell);
+            }else{
+                return endCell;
+            }
+        }else{
+            var fb = firstBlank();
+            if(!$('#skip-filled').prop('checked')){
+                if(curCell !== endCell){
+                    return getNextCell(curCell);
+                }else if($('#move-to-blank').prop('checked') && fb!==-1){
+                    return fb;
+                }else if($('#move-at-end').prop('checked')){
+                    return getNextCell(curCell);
+                }
+                return curCell;
+            }
+            
+            var cell = curCell;
+            while(gridTextDOM[cell].text().length > 0){
+                if(cell === endCell){
+                    if($('#move-to-blank').prop('checked') && fb!==-1){
+                        return fb;
+                    }else if(!$('#move-at-end').prop('checked')){
+                        return endCell;
+                    }
+                }
+                
+                cell = getNextCell(cell);
+                if(cell === curCell) return curCell;
+            }
+            return cell;
         }
-
-        navigateTo(nextCell);
-    };
+    }
 
     var navigateToClue = function(clue){
         changeDir(puzzle.clues[clue].type);
@@ -383,20 +420,10 @@ var main = function() {
         if(keyCode>=65 && keyCode<=90){
             if(event.ctrlKey) return;
 
-            var cellEmpty = (gridTextDOM[curCell].text()==='');
+            var overwrite = (gridTextDOM[curCell].text()!=='');
             updateCell(String.fromCharCode(keyCode));
-
-            if(curCell != puzzle.clues[curClue].endCell){
-                if(cellEmpty && $('#skip-filled').prop('checked')){
-                    navigateToEmpty();
-                }else{
-                    navigateForward();
-                }
-            }else{
-                if($('#move-at-end').prop('checked')){
-                    navigateForward();
-                }
-            }
+            
+            navigateTo(getInputCell(overwrite));
         }else{
             switch(keyCode){
                 case 8: // backspace
@@ -580,8 +607,6 @@ var main = function() {
 
     socket.on('update_puzzle', function(puzzleData) {
         initialize(puzzleData);
-        console.log('updating puzzle!!');
-        console.log(puzzle.uid);
     });
 
     socket.on('error', function(message) {
